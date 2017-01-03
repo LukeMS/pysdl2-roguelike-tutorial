@@ -16,7 +16,7 @@ from os.path import abspath, basename, isdir
 
 from sys import argv
 
-WP = os.path.join(os.path.dirname(__file__), '..', 'first_rl_part_1')
+WP = os.path.join(os.path.dirname(__file__), '..')
 
 
 def tree(dir, padding, print_files=False, ignore_paths=None):

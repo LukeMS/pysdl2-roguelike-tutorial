@@ -65,11 +65,11 @@ class Manager(object):
                 constants.SCREEN_HEIGHT
             tile_size (int): size of a (square) tile's side in pixels.
                 Defaults to constants.TILE_SIZE
-            limit_fps (int): how many frames per second should be drawn.
+            limit_fps (int): maximum frames per second that should be drawn.
                 Defaults to constants.LIMIT_FPS
-            window_color (4-tuple): tuple of 4 integers representing Red,
-                Greehn, Blue and Alpha values (0-255). Defaults to
-                constants.WINDOW_COLOR
+            window_color (4-tuple): the window's background color, as a tuple
+                of 4 integers representing Red, Greehn, Blue and Alpha values
+                (0-255). Defaults to constants.WINDOW_COLOR
 
         Usage:
             m = Manager()  # start with default parameters
