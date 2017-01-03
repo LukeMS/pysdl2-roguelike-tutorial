@@ -16,7 +16,7 @@
 
     --------------------------------------------------------------------------
 
-    PygameSDL2 Notice / ZLIB License:
+    PygameSDL2 Notice / zlib License:
     --------------------------------------------------------------------------
     # Original work:
     #    Copyright 2014 Tom Rothamel <tom@rothamel.us>

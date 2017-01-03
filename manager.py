@@ -1,7 +1,7 @@
 """Basic scene manager."""
 
 """
-    ZLIB License:
+    zlib License:
     --------------------------------------------------------------------------
     # Copyright 2017 Lucas Siqueira <lucas.morais.siqueira@gmail.com>
     #
