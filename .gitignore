@@ -1,3 +1,4 @@
+*.xcf
 *.sublime-workspace
 *.sublime-project
 *.cmd

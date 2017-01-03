@@ -33,13 +33,15 @@ os.environ["PYSDL2_DLL_PATH"] = "C:\\lib\\SDL2-2.0.5-win32-x86"
 import sdl2
 import sdl2.ext
 
-from constants import (SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_COLS, SCREEN_ROWS,
-                       LIMIT_FPS, TILE_SIZE, WINDOW_COLOR)
+from constants import (SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LIMIT_FPS,
+                       WINDOW_COLOR)
 from util.time import Clock
 
-__all__ = ("Manager", "KeyboardStateController", "SceneBase", "RESOURCES")
 
-RESOURCES = sdl2.ext.Resources(
+__all__ = ("Manager", "KeyboardStateController", "SceneBase", "Resources")
+
+
+Resources = sdl2.ext.Resources(
     os.path.join(os.path.dirname(__file__), "resources"))
 
 
@@ -61,10 +63,6 @@ class Manager(object):
                 constants.SCREEN_WIDTH
             height (int): the height of the screen in pixels. Defaults to
                 constants.SCREEN_HEIGHT
-            cols (int): the number of tile_size columns of the screen.
-                Defaults to constants.SCREEN_COLS
-            rows (int): the number of tile_size rows of the screen. Defaults
-                to constants.SCREEN_ROWS
             tile_size (int): size of a (square) tile's side in pixels.
                 Defaults to constants.TILE_SIZE
             limit_fps (int): how many frames per second should be drawn.
@@ -81,11 +79,13 @@ class Manager(object):
         # Set the default arguments
         self.width = width or SCREEN_WIDTH
         self.height = height or SCREEN_HEIGHT
-        self.cols = cols or SCREEN_COLS
-        self.rows = rows or SCREEN_ROWS
         self.tile_size = tile_size or TILE_SIZE
         self.limit_fps = limit_fps or LIMIT_FPS
         self.window_color = window_color or WINDOW_COLOR
+
+        # Number of tile_size-sized drawable columns and rows on screen
+        self.cols = self.width // self.tile_size
+        self.rows = self.height // self.tile_size
 
         # Initialize with no scene
         self.scene = None
@@ -101,7 +101,7 @@ class Manager(object):
         # etc.) and give it a meaningful title and size. We definitely need
         # this, if we want to present something to the user.
         self.window = sdl2.ext.Window(
-            "Tiles", size=(SCREEN_WIDTH, SCREEN_HEIGHT),
+            "Tiles", size=(self.width, self.height),
             flags=sdl2.SDL_WINDOW_BORDERLESS)
 
         # Create a renderer that supports hardware-accelerated sprites.
@@ -369,13 +369,67 @@ class SceneBase(object):
     # properties
     @property
     def height(self):
-        """Main window height."""
+        """Main window height.
+
+        Returns:
+            Manager.height
+        """
         return self.manager.height
 
     @property
     def width(self):
-        """Main window width."""
+        """Main window width.
+
+        Returns:
+            Manager.height
+        """
         return self.manager.width
+
+    @property
+    def factory(self):
+        """Reference to sdl2.ext.SpriteFactory instance.
+
+        Returns:
+            Manager.factory
+        """
+        return self.manager.factory
+
+    @property
+    def kb_state(self):
+        """Reference to KeyboardStateController instance.
+
+        Returns:
+            Manager.kb_state
+        """
+        return self.manager.kb_state
+
+    @property
+    def renderer(self):
+        """Reference to sdl2.ext.Renderer instance.
+
+        Returns:
+            Manager.renderer
+
+        """
+        return self.manager.renderer
+
+    @property
+    def sdlrenderer(self):
+        """Reference to sdl2.SDL_Renderer instance.
+
+        Returns:
+            Manager.renderer.sdlrenderer
+        """
+        return self.manager.renderer.sdlrenderer
+
+    @property
+    def spriterenderer(self):
+        """Reference to sdl2.ext.TextureSpriteRenderSystem instance.
+
+        Returns:
+            Manager.spriterenderer
+        """
+        return self.manager.spriterenderer
 
     # other methods
     def quit(self):
