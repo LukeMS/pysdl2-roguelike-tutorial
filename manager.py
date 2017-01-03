@@ -351,7 +351,9 @@ class SceneBase(object):
     def __new__(cls, manager, **kwargs):
         """Create a new instance of a scene.
 
-        A reference to the manager is stored before returning it.
+        A reference to the manager is stored before returning the instance.
+        This is made preventively because many properties are related to the
+        manager.
 
         Args:
             manager (Manager): the running instance of the Manager
@@ -482,6 +484,7 @@ class SceneBase(object):
 
 
 if __name__ == '__main__':
+    # example, with a borderless yet ugly green window
     m = Manager(window_color=(0, 255, 0, 255))
     m.set_scene(scene=SceneBase)
     m.run()
