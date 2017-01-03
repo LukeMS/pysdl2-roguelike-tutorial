@@ -1,39 +1,46 @@
-"""Pure Python implementation of Pygame/PyGameSDL2's rect.
+"""Modified, pure Python implementation of PyGameSDL2's rect."""
 
-Original available at:
-    github.com/renpy/pygame_sdl2/blob/master/src/pygame_sdl2/rect.pyx
+"""
+    Original source code available at:
+        github.com/
+            renpy/pygame_sdl2/blob/master/src/pygame_sdl2/rect.pyx
 
-----------------------------------------------------------------------------
-           _ _                    _                                _
-     /\   | | |                  | |                              | |
-    /  \  | | |_ ___ _ __ ___  __| |  ___  ___  _   _ _ __ ___ ___| |
-   / /\ \ | | __/ _ \ '__/ _ \/ _` | / __|/ _ \| | | | '__/ __/ _ \ |
-  / ____ \| | ||  __/ | |  __/ (_| | \__ \ (_) | |_| | | | (_|  __/_|
- /_/    \_\_|\__\___|_|  \___|\__,_| |___/\___/ \__,_|_|  \___\___(_)
+    Altered source plain mark:
+    --------------------------------------------------------------------------
+               _ _                    _                                  _
+         /\   | | |                  | |                                | |
+        /  \  | | |_ ___ _ __ ___  __| |    ___  ___  _   _ _ __ ___ ___| |
+       / /\ \ | | __/ _ \ '__/ _ \/ _` |   / __|/ _ \| | | | '__/ __/ _ \ |
+      / ____ \| | ||  __/ | |  __/ (_| |   \__ \ (_) | |_| | | | (_|  __/_|
+     /_/    \_\_|\__\___|_|  \___|\__,_|   |___/\___/ \__,_|_|  \___\___(_)
 
-----------------------------------------------------------------------------
+    --------------------------------------------------------------------------
 
-PygameSDL2 Notice:
-----------------------------------------------------------------------------
-# Copyright 2014 Tom Rothamel <tom@rothamel.us>
-# Copyright 2014 Patrick Dawson <pat@dw.is>
-#
-# This software is provided 'as-is', without any express or implied
-# warranty.  In no event will the authors be held liable for any damages
-# arising from the use of this software.
-#
-# Permission is granted to anyone to use this software for any purpose,
-# including commercial applications, and to alter it and redistribute it
-# freely, subject to the following restrictions:
-#
-# 1. The origin of this software must not be misrepresented; you must not
-#    claim that you wrote the original software. If you use this software
-#    in a product, an acknowledgment in the product documentation would be
-#    appreciated but is not required.
-# 2. Altered source versions must be plainly marked as such, and must not be
-#    misrepresented as being the original software.
-# 3. This notice may not be removed or altered from any source distribution.
-----------------------------------------------------------------------------
+    PygameSDL2 Notice / ZLIB License:
+    --------------------------------------------------------------------------
+    # Original work:
+    #    Copyright 2014 Tom Rothamel <tom@rothamel.us>
+    #    Copyright 2014 Patrick Dawson <pat@dw.is>
+    # Modified work:
+    #    Copyright 2017 Lucas Siqueira <lucas.morais.siqueira@gmail.com>
+    #
+    # This software is provided 'as-is', without any express or implied
+    # warranty.  In no event will the authors be held liable for any damages
+    # arising from the use of this software.
+    #
+    # Permission is granted to anyone to use this software for any purpose,
+    # including commercial applications, and to alter it and redistribute it
+    # freely, subject to the following restrictions:
+    #
+    # 1. The origin of this software must not be misrepresented; you must not
+    #    claim that you wrote the original software. If you use this software
+    #    in a product, an acknowledgment in the product documentation would be
+    #    appreciated but is not required.
+    # 2. Altered source versions must be plainly marked as such, and must not
+    #    be misrepresented as being the original software.
+    # 3. This notice may not be removed or altered from any source
+    #    distribution.
+    --------------------------------------------------------------------------
 """
 
 from sdl2 import SDL_Rect
