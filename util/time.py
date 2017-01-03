@@ -48,6 +48,9 @@ import math
 from sdl2 import SDL_Delay, SDL_GetTicks
 
 
+__all__ = ('Clock', 'wait', 'delay', 'get_time', 'get_delta')
+
+
 def wait(milliseconds):
     """..."""
     start = SDL_GetTicks()

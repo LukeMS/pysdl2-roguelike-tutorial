@@ -54,36 +54,98 @@ class Manager(object):
         self, width=None, height=None, cols=None, rows=None, tile_size=None,
         limit_fps=None, window_color=None
     ):
-        """Initialization."""
+        """Initialization.
+
+        Args:
+            width (int): the width of the screen in pixels. Defaults to
+                constants.SCREEN_WIDTH
+            height (int): the height of the screen in pixels. Defaults to
+                constants.SCREEN_HEIGHT
+            cols (int): the number of tile_size columns of the screen.
+                Defaults to constants.SCREEN_COLS
+            rows (int): the number of tile_size rows of the screen. Defaults
+                to constants.SCREEN_ROWS
+            tile_size (int): size of a (square) tile's side in pixels.
+                Defaults to constants.TILE_SIZE
+            limit_fps (int): how many frames per second should be drawn.
+                Defaults to constants.LIMIT_FPS
+            window_color (4-tuple): tuple of 4 integers representing Red,
+                Greehn, Blue and Alpha values (0-255). Defaults to
+                constants.WINDOW_COLOR
+
+        Usage:
+            m = Manager()  # start with default parameters
+            m.set_scene(SceneBase)  # set a scene. This is a blank base scene
+            m.execute()  # call the main loop
+        """
+        # Set the default arguments
         self.width = width or SCREEN_WIDTH
         self.height = height or SCREEN_HEIGHT
         self.cols = cols or SCREEN_COLS
         self.rows = rows or SCREEN_ROWS
-        self.limit_fps = limit_fps or LIMIT_FPS
         self.tile_size = tile_size or TILE_SIZE
+        self.limit_fps = limit_fps or LIMIT_FPS
         self.window_color = window_color or WINDOW_COLOR
+
+        # Initialize with no scene
         self.scene = None
 
+        # Initialize the video system - this implicitly initializes some
+        # necessary parts within the SDL2 DLL used by the video module.
+        #
+        # You SHOULD call this before using any video related methods or
+        # classes.
         sdl2.ext.init()
 
+        # Create a new window (like your browser window or editor window,
+        # etc.) and give it a meaningful title and size. We definitely need
+        # this, if we want to present something to the user.
         self.window = sdl2.ext.Window(
             "Tiles", size=(SCREEN_WIDTH, SCREEN_HEIGHT),
             flags=sdl2.SDL_WINDOW_BORDERLESS)
+
+        # Create a renderer that supports hardware-accelerated sprites.
         self.renderer = sdl2.ext.Renderer(self.window)
+
+        # Create a sprite factory that allows us to create visible 2D elements
+        # easily.
         self.factory = sdl2.ext.SpriteFactory(
             sdl2.ext.TEXTURE, renderer=self.renderer)
+
+        # Creates a simple rendering system for the Window. The
+        # SpriteRenderSystem can draw Sprite objects on the window.
         self.spriterenderer = self.factory.create_sprite_render_system(
             self.window)
 
+        # By default, every Window is hidden, not shown on the screen right
+        # after creation. Thus we need to tell it to be shown now.
         self.window.show()
+
+        # Enforce window raising just to be sure.
         sdl2.SDL_RaiseWindow(self.window.window)
+
+        # Initialize the keyboard state controller.
+        # PySDL2/SDL2 shouldn't need this but the basic procedure for getting
+        # key mods and locks is not working for me atm.
+        # So I've implemented my own controller.
         self.kb_state = KeyboardStateController()
-        self.get_mouse_state()
+
+        # Initialize a mouse starting position. From here on the manager will
+        # be able to work on distances from previous positions.
+        self._get_mouse_state()
+
+        # Initialize a clock utility to help us control the framerate
         self.clock = Clock()
+
+        # Make the Manager alive. This is used on the main loop.
         self.alive = True
 
-    def get_mouse_state(self):
-        """..."""
+    def _get_mouse_state(self):
+        """Get the mouse state.
+
+        This is only required during initialization. Later on the mouse
+        position will be passed through events.
+        """
         x = ctypes.c_int(0)
         y = ctypes.c_int(0)
         sdl2.mouse.SDL_GetMouseState(ctypes.byref(x), ctypes.byref(y))
@@ -97,12 +159,10 @@ class Manager(object):
             self.clock.tick(self.limit_fps)
             self.on_event()
             self.on_update()
-
-        sdl2.ext.quit()
-        return 0
+        return sdl2.ext.quit()
 
     def on_event(self):
-        """Handle the events and distribute them."""
+        """Handle the events and pass them to the active scene."""
         scene = self.scene
 
         if scene is None:
@@ -114,10 +174,12 @@ class Manager(object):
                 self.alive = False
                 return
 
+            # Redraw in case the focus was lost and now regained
             if event.type == sdl2.SDL_WINDOWEVENT_FOCUS_GAINED:
                 self.on_update()
                 continue
 
+            # on_mouse_motion | on_mouse_drag
             if event.type == sdl2.SDL_MOUSEMOTION:
                 x = event.motion.x
                 y = event.motion.y
@@ -135,6 +197,7 @@ class Manager(object):
                 else:
                     scene.on_mouse_motion(event, x, y, dx, dy)
                 continue
+            # on_mouse_press
             elif event.type == sdl2.SDL_MOUSEBUTTONDOWN:
                 x = event.button.x
                 y = event.button.y
@@ -151,44 +214,48 @@ class Manager(object):
 
                 scene.on_mouse_press(event, x, y, button, double)
                 continue
-
+            # on_mouse_scroll (wheel)
             elif event.type == sdl2.SDL_MOUSEWHEEL:
                 offset_x = event.wheel.x
                 offset_y = event.wheel.y
                 scene.on_mouse_scroll(event, offset_x, offset_y)
                 continue
 
+            # for keyboard input, set the key symbol and keyboard modifiers
             mod = self.kb_state.process(event)
             sym = event.key.keysym.sym
 
+            # on_key_release
             if event.type == sdl2.SDL_KEYUP:
                 scene.on_key_release(event, sym, mod)
+            # on_key_press
             elif event.type == sdl2.SDL_KEYDOWN:
                 scene.on_key_press(event, sym, mod)
-        return
 
     def on_update(self):
         """Update scene unless specified not to do so."""
         scene = self.scene
         if self.alive:
+            # clear the window with its color
             self.renderer.clear(self.window_color)
             if scene:
+                # call the active scene's on_update
                 scene.on_update()
+            # present what we have to the screen
             self.present()
 
     def present(self):
-        """Flip."""
+        """Flip the GPU buffer."""
         sdl2.render.SDL_RenderPresent(self.spriterenderer.sdlrenderer)
 
-    def draw_fps(self):
-        """Draw the fps display."""
-        ms = self.ms
-        if self.show_fps and self.scene:
-            text = "FPS: %.3d" % ms
-            self.scene.draw_fps(text)
-
     def set_scene(self, scene=None, **kwargs):
-        """..."""
+        """Set the scene.
+
+        Args:
+            scene (SceneBase): the scene to be initialized
+            kwargs: the arguments that should be passed to the scene
+
+        """
         self.scene = scene(manager=self, **kwargs)
 
 
