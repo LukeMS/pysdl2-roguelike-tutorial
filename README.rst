@@ -603,153 +603,163 @@ We should now create a base scene that would be inherited by the custom scenes w
 
 .. code-block:: python
 
-class SceneBase(object):
-    """Basic scene of the game.
+    class SceneBase(object):
+        """Basic scene of the game.
 
-    New Scenes should be subclasses of SceneBase.
-    """
-
-    def __new__(cls, manager, **kwargs):
-        """Create a new instance of a scene.
-
-        A reference to the manager is stored before returning the instance.
-        This is made preventively because many properties are related to the
-        manager.
-
-        Args:
-            manager (Manager): the running instance of the Manager
+        New Scenes should be subclasses of SceneBase.
         """
-        scene = super().__new__(cls)
-        scene.manager = manager
-        return scene
 
-    def __init__(self, **kwargs):
-        """Initialization."""
-        pass
+        def __new__(cls, manager, **kwargs):
+            """Create a new instance of a scene.
 
-    # properties
-    @property
-    def height(self):
-        """Main window height.
+            A reference to the manager is stored before returning the instance.
+            This is made preventively because many properties are related to the
+            manager.
 
-        Returns:
-            Manager.height
-        """
-        return self.manager.height
+            Args:
+                manager (Manager): the running instance of the Manager
+            """
+            scene = super().__new__(cls)
+            scene.manager = manager
+            return scene
 
-    @property
-    def width(self):
-        """Main window width.
+        def __init__(self, **kwargs):
+            """Initialization."""
+            pass
 
-        Returns:
-            Manager.height
-        """
-        return self.manager.width
+        # properties
+        @property
+        def height(self):
+            """Main window height.
 
-    @property
-    def factory(self):
-        """Reference to sdl2.ext.SpriteFactory instance.
+            Returns:
+                Manager.height
+            """
+            return self.manager.height
 
-        Returns:
-            Manager.factory
-        """
-        return self.manager.factory
+        @property
+        def width(self):
+            """Main window width.
 
-    @property
-    def kb_state(self):
-        """Reference to KeyboardStateController instance.
+            Returns:
+                Manager.height
+            """
+            return self.manager.width
 
-        Returns:
-            Manager.kb_state
-        """
-        return self.manager.kb_state
+        @property
+        def factory(self):
+            """Reference to sdl2_ext2.SpriteFactory instance.
 
-    @property
-    def renderer(self):
-        """Reference to sdl2.ext.Renderer instance.
+            Returns:
+                Manager.factory
+            """
+            return self.manager.factory
 
-        Returns:
-            Manager.renderer
+        @property
+        def kb_state(self):
+            """Reference to KeyboardStateController instance.
 
-        """
-        return self.manager.renderer
+            Returns:
+                Manager.kb_state
+            """
+            return self.manager.kb_state
 
-    @property
-    def sdlrenderer(self):
-        """Reference to sdl2.SDL_Renderer instance.
+        @property
+        def renderer(self):
+            """Reference to sdl2_ext2.Renderer instance.
 
-        Returns:
-            Manager.renderer.sdlrenderer
-        """
-        return self.manager.renderer.sdlrenderer
+            Returns:
+                Manager.renderer
 
-    @property
-    def spriterenderer(self):
-        """Reference to sdl2.ext.TextureSpriteRenderSystem instance.
+            """
+            return self.manager.renderer
 
-        Returns:
-            Manager.spriterenderer
-        """
-        return self.manager.spriterenderer
+        @property
+        def resources(self):
+            """Reference to sdl2_ext2.Resources instance.
 
-    # other methods
-    def quit(self):
-        """Stop the manager main loop."""
-        self.manager.alive = False
+            Returns:
+                Manager.resources
 
-    # event methods
-    def on_key_press(self, event, sym, mod):
-        """Called on keyboard input, when a key is **held down**.
+            """
+            return self.manager.resources
 
-        Args:
-            event (sdl2.events.SDL_Event): The base event, as passed by SDL2.
-                Unless specifically needed, sym and mod should be used
-                instead.
-            sym (int): Integer representing code of the key pressed. For
-                printable keys ``chr(key)`` should return the corresponding
-                character.
-            mod (KeyboardStateController): the keyboard state for modifiers
-                and locks. See :class:KeyboardStateController
-        """
-        pass
+        @property
+        def sdlrenderer(self):
+            """Reference to sdl2.SDL_Renderer instance.
 
-    def on_key_release(self, event, sym, mod):
-        """Called on keyboard input, when a key is **released**.
+            Returns:
+                Manager.renderer.sdlrenderer
+            """
+            return self.manager.renderer.sdlrenderer
 
-        By default if the Escape key is pressed the manager quits.
-        If that behaviour is desired you can call ``super().on_key_release(
-        event, sym, mod)`` on a child class.
+        @property
+        def spriterenderer(self):
+            """Reference to sdl2_ext2.TextureSpriteRenderSystem instance.
 
-        Args:
-            event (sdl2.events.SDL_Event): The base event, as passed by SDL2.
-                The other arguments should be used for a higher level
-                interaction, unless specifically needed.
-            sym (int): Integer representing code of the key pressed. For
-                printable keys ``chr(key)`` should return the corresponding
-                character.
-            mod (KeyboardStateController): the keyboard state for modifiers
-                and locks. See :class:KeyboardStateController
-        """
-        if sym == sdl2.SDLK_ESCAPE:
-            self.quit()
+            Returns:
+                Manager.spriterenderer
+            """
+            return self.manager.spriterenderer
 
-    def on_mouse_drag(self, event, x, y, dx, dy, button):
-        """Called when mouse buttons are pressed and the mouse is dragged.
+        # other methods
+        def quit(self):
+            """Stop the manager main loop."""
+            self.manager.alive = False
 
-        Args:
-            event (sdl2.events.SDL_Event): The base event, as passed by SDL2.
-                The other arguments should be used for a higher level
-                interaction, unless specifically needed.
-            x (int): horizontal coordinate, relative to window.
-            y (int): vertical coordinate, relative to window.
-            dx (int): relative motion in the horizontal direction
-            dy (int): relative motion in the vertical direction
-            button (str, "RIGHT"|"MIDDLE"|"LEFT"): string representing the
-                button pressed.
-        """
-        pass
+        # event methods
+        def on_key_press(self, event, sym, mod):
+            """Called on keyboard input, when a key is **held down**.
 
-    def on_mouse_motion(self, event, x, y, dx, dy):
+            Args:
+                event (sdl2.events.SDL_Event): The base event, as passed by SDL2.
+                    Unless specifically needed, sym and mod should be used
+                    instead.
+                sym (int): Integer representing code of the key pressed. For
+                    printable keys ``chr(key)`` should return the corresponding
+                    character.
+                mod (KeyboardStateController): the keyboard state for modifiers
+                    and locks. See :class:KeyboardStateController
+            """
+            pass
+
+        def on_key_release(self, event, sym, mod):
+            """Called on keyboard input, when a key is **released**.
+
+            By default if the Escape key is pressed the manager quits.
+            If that behaviour is desired you can call ``super().on_key_release(
+            event, sym, mod)`` on a child class.
+
+            Args:
+                event (sdl2.events.SDL_Event): The base event, as passed by SDL2.
+                    The other arguments should be used for a higher level
+                    interaction, unless specifically needed.
+                sym (int): Integer representing code of the key pressed. For
+                    printable keys ``chr(key)`` should return the corresponding
+                    character.
+                mod (KeyboardStateController): the keyboard state for modifiers
+                    and locks. See :class:KeyboardStateController
+            """
+            if sym == sdl2.SDLK_ESCAPE:
+                self.quit()
+
+        def on_mouse_drag(self, event, x, y, dx, dy, button):
+            """Called when mouse buttons are pressed and the mouse is dragged.
+
+            Args:
+                event (sdl2.events.SDL_Event): The base event, as passed by SDL2.
+                    The other arguments should be used for a higher level
+                    interaction, unless specifically needed.
+                x (int): horizontal coordinate, relative to window.
+                y (int): vertical coordinate, relative to window.
+                dx (int): relative motion in the horizontal direction
+                dy (int): relative motion in the vertical direction
+                button (str, "RIGHT"|"MIDDLE"|"LEFT"): string representing the
+                    button pressed.
+            """
+            pass
+
+        def on_mouse_motion(self, event, x, y, dx, dy):
             """Called when the mouse is moved.
 
             Args:
@@ -800,13 +810,14 @@ class SceneBase(object):
 Ta-da! No, no character on screen yet. But things are about to start running smoothly from now on!
 To test if everything works so far, add the lines below to the end of ''manager.py''. Cross your fingers and run it!
 An ugly green screen should appear and, if you press Escape, it should quit quietly.
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">
-if __name__ == '__main__':
-    # example, with a borderless yet ugly green window
-    m = Manager(window_color=(0, 255, 0, 255))
-    m.set_scene(scene=SceneBase)
-    m.run()
-</syntaxhighlight></div>
+
+.. code-block:: python
+
+    if __name__ == '__main__':
+        # example, with a borderless yet ugly green window
+        m = Manager(window_color=(0, 255, 0, 255))
+        m.set_scene(scene=SceneBase)
+        m.run()
 
 [[Complete Roguelike Tutorial, using python3+pysdl2, part 0 code|Here]]'s a rundown of the whole code so far.
 
@@ -818,12 +829,15 @@ if __name__ == '__main__':
 This is part of a series of tutorials; the main page can be found [[Complete Roguelike Tutorial, using python3+pysdl2|here]].
 </center></td></tr></table></center>
 
+------
 
-__TOC__
+Part 1: Graphics
+==================
 
-<center><h1>'''Graphics'''</h1></center>
+.. contents:: :local:
 
-== Showing the character on screen ==
+Showing the character on screen
+-------------------------------
 
 Time to work with ''rl.py'' - the shiny part our game. Create it in the project's folder.
 
@@ -832,234 +846,84 @@ We're using art by David E. Gervais, available [http://pousse.rapiere.free.fr/to
 Note that those sprites are in 54x54 resolution. And they have a pink background. A [https://github.com/LukeMS/pysdl2-roguelike-tutorial/blob/master/resources/HalfOgreFighter3.PNG proper sized version with transparent background] is available at the project's GitHub. Create a ''resources'' folder and save the image on it. Save the [https://github.com/LukeMS/pysdl2-roguelike-tutorial/raw/master/resources/davir_gervais_tileset.license license] there too, so that we do not forget to give the author its deserved credits.
 
 By now your project's folder should look like this:
- +-pysdl2-roguelike-tutorial/
-   |
-   +-constants.py
-   |
-   +-manager.py
-   |
-   +-rl.py
-   |
-   +-resources/
-   | |
-   | +-[https://github.com/LukeMS/pysdl2-roguelike-tutorial/raw/master/resources/davir_gervais_tileset.license davir_gervais_tileset.license]
-   | |
-   | +-[https://github.com/LukeMS/pysdl2-roguelike-tutorial/raw/master/resources/HalfOgreFighter3.png HalfOgreFighter3.png]
-   |
-   +-util/
-     |
-     +-time.py
+.. code-block::
+
+    +-pysdl2-roguelike-tutorial/
+      |
+      +-constants.py
+      |
+      +-manager.py
+      |
+      +-rl.py
+      |
+      +-resources/
+      | |
+      | +-`david_gervais_tileset.license`_
+      | |
+      | +-`HalfOgreFighter3.png`_
+      |
+      +-util/
+        |
+        +-time.py
 
 Because we did some hard work creating our ''Manager'', ''SceneBase'', etc., we won't even need to import sdl2 for this part. All we need is to import those classes (and ''Resources'') from ''manager'':
 <div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">
 from manager import Manager, SceneBase, Resources
 </syntaxhighlight></div>
 
+.. _`david_gervais_tileset.license`: https://github.com/LukeMS/pysdl2-roguelike-tutorial/raw/master/resources/david_gervais_tileset.license
+.. _`HalfOgreFighter3.png`: https://github.com/LukeMS/pysdl2-roguelike-tutorial/raw/master/resources/HalfOgreFighter3.png
 
-Let's put Inheritance to work by subclassing ''SceneBase'':
+Let's put inheritance to work by subclassing ''SceneBase'':
 
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">
-class RogueLike(SceneBase):
-    """An aspiring Roguelike game's scene."""
+.. code-block:: python
 
-    def __init__(self, **kwargs):
-        """Initialization."""
-        # Nothing there for us but lets call super in case we implement
-        # something later on, ok?
-        super().__init__(**kwargs)
+    class RogueLike(SceneBase):
+        """An aspiring Roguelike game's scene."""
 
-        # pass the name of the resource to the sdl2.ext.Resources instance on
-        # manager.py
-        fname = Resources.get("HalfOgreFighter3.png")
+        def __init__(self, **kwargs):
+            """Initialization."""
+            # Nothing there for us but lets call super in case we implement
+            # something later on, ok?
+            super().__init__(**kwargs)
 
-        # use the pysdl2 factory to create a sprite from an image
-        self.sprite = self.factory.from_image(fname)
+            # pass the name of the resource to the sdl2.ext.Resources instance on
+            # manager.py
+            fname = Resources.get("HalfOgreFighter3.png")
 
-        # set it to a position to look better on our screenshot :)
-        self.sprite.position = (128, 128)
+            # use the pysdl2 factory to create a sprite from an image
+            self.sprite = self.factory.from_image(fname)
 
-    def on_update(self):
-        """Graphical logic."""
-        # use the render method from manager's spriterenderer
-        self.manager.spriterenderer.render(sprites=self.sprite)
-</syntaxhighlight></div>
+            # set it to a position to look better on our screenshot :)
+            self.sprite.position = (128, 128)
+
+        def on_update(self):
+            """Graphical logic."""
+            # use the render method from manager's spriterenderer
+            self.manager.spriterenderer.render(sprites=self.sprite)
+
 That would be all for now.
 To test, at the end of the ''rl.py'', adding the belo lines and run it:
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">
-if __name__ == '__main__':
-    # create a game/Manager instance
-    # we're using an arbitrary size to put our half-ogre right in the middle 
-    # of the screen
-    m = Manager(width=288, height=288)
 
-    # pass our created RogueLike scene to the Manager
-    m.set_scene(scene=RogueLike)
+.. code-block:: python
 
-    # make it fly!
-    m.run()
-</syntaxhighlight></div>
+    if __name__ == '__main__':
+        # create a game/Manager instance
+        # we're using an arbitrary size to put our half-ogre right in the middle 
+        # of the screen
+        m = Manager(width=288, height=288)
+
+        # pass our created RogueLike scene to the Manager
+        m.set_scene(scene=RogueLike)
+
+        # make it fly!
+        m.run()
 
 And now we should be able to see a mighty half-ogre in the middle of a black screen:
 
 [[File:Roguelike_tutorial_pysdl2-part1-character_on_screen.png|center]]
 
-== Show me the @!!! ==
+Show me the @!!!
+----------------
 
-In this tutorial we're using a bitmap created from a regular font. I've done this myself and you can download it here.
-Now, something libtcod-specific: we're going to use a custom font! It's pretty easy. libtcod comes bundled with a few fonts that are usable right out of the box. Remember however that they can be in different '''formats''', and you'll need to tell it about this. This one is "grayscale" and using the "tcod layout", most fonts are in this format and thus end with ''_gs_tc''. If you wanna use a font with a different layout or make your own, the [http://roguecentral.org/doryen/data/libtcod/doc/1.5.1/html2/console_set_custom_font.html?c=false&cpp=false&cs=false&py=true&lua=false docs on the subject] are really informative. You can worry about that at a later time though. Notice that the size of a font is automatically detected.
-
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)</syntaxhighlight></div>
-
-
-This is probably the most important call, initializing the window. We're specifying its size, the title (change it now if you want to), and the last parameter tells it if it should be fullscreen or not.
-
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">libtcod.console_init_root(SCREEN_WIDTH, SCREEN_HEIGHT, 'python/libtcod tutorial', False)</syntaxhighlight></div>
-
-
-For a real-time roguelike, you wanna limit the speed of the game (frames-per-second or FPS). If you want it to be turn-based, ignore this line. (This line will simply have no effect if your game is turn-based.)
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #D0FFC2"><syntaxhighlight lang="python">libtcod.sys_set_fps(LIMIT_FPS)</syntaxhighlight></div>
-
-
-Now the main loop. It will keep running the logic of your game as long as the window is not closed.
-
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">while not libtcod.console_is_window_closed():</syntaxhighlight></div>
-
-
-For each iteration we'll want to print something useful to the window. If your game is turn-based each iteration is a turn; if it's real-time, each one is a frame. Here we're setting the text color to be white. [http://roguecentral.org/doryen/data/libtcod/doc/1.5.1/html2/color.html?c=false&cpp=false&cs=false&py=true&lua=false There's a good list of colors you can use here], along with some info about mixing them and all that. The zero is the console we're printing to, in this case the screen; more on that later.
-
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">    libtcod.console_set_default_foreground(0, libtcod.white)</syntaxhighlight></div>
-
-
-Don't forget the indentation at the beginning of the line, it's extra-important in Python. '''Make sure you don't mix tabs with spaces for indentation!''' This comes up often if you copy-and-paste code from the net, and you'll see an error telling you something about the indentation (that's a pretty big clue right there!). Choose one option and stick with it. In this tutorial we're using the 4-spaces convention, but tabs are easy to work with in many editors so they're a valid choice too.
-
-Now print a character to the coordinates (1,1). Once more the first zero specifies the console, which is the screen in this case. Can you guess what that character is? No, it doesn't move yet!
-
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">    libtcod.console_put_char(0, 1, 1, '@', libtcod.BKGND_NONE)</syntaxhighlight></div>
-
-
-At the end of the main loop you'll always need to present the changes to the screen. This is called ''flushing'' the console and is done with the following line.
-
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">    libtcod.console_flush()</syntaxhighlight></div>
-
-
-Ta-da! You're done. Run that code and give yourself a pat on the back!
-
-<center><table border="0" cellpadding="10" cellspacing="0" style="background:#F0E68C" width="65%"><tr><td><center>
-<b>Common reasons the code won't run.</b></center>
-
-* On Windows? Is either of the libtcod or SDL dlls not found?<br/><i>Make sure your Python and libtcod are either BOTH 32 bit, or BOTH 64 bit.</i>
-* Python errors? Using Python 3?<br/><i>We said above that this tutorial is only for Python 2.  So use Python 2, with Python 3 you are on your own.  They're different languages, it won't just magically work!</i>
-* Still blocked?  Check out the [[Complete_Roguelike_Tutorial,_using_Python+libtcod,_problems|problems page]].
-</td></tr></table></center>
-
-Note that since we don't have any input handling code, the game may crash on exit (it won't process the OS's requests to close). Oops! Don't worry though, this problem will go away as soon as we add keyboard support.
-
-[[Complete Roguelike Tutorial, using python+libtcod, part 1 code#Showing the @ on screen|Here]]'s the complete code so far.
-
-== Moving around ==
-
-That was pretty neat, huh? Now we're going to move around that @ with the keys!
-
-First, we need to keep track of the player's position. We'll use these variables for that, and take the opportunity to initialize them to the center of the screen instead of the top-left corner. This can go just before the main loop.
-
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">playerx = SCREEN_WIDTH/2
-playery = SCREEN_HEIGHT/2</syntaxhighlight></div>
-
-
-There are functions to check for pressed keys. When that happens, just change the coordinates accordingly. Then, print the @ at those coordinates. We'll make a separate function to handle the keys.
-
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">def handle_keys():
-    global playerx, playery
-    
-    #movement keys
-    if libtcod.console_is_key_pressed(libtcod.KEY_UP):
-        playery -= 1
-        
-    elif libtcod.console_is_key_pressed(libtcod.KEY_DOWN):
-        playery += 1
-        
-    elif libtcod.console_is_key_pressed(libtcod.KEY_LEFT):
-        playerx -= 1
-        
-    elif libtcod.console_is_key_pressed(libtcod.KEY_RIGHT):
-        playerx += 1</syntaxhighlight></div>
-
-
-Done! These are the arrow keys, if you want to use other keys here's a [http://roguecentral.org/doryen/data/libtcod/doc/1.5.1/html2/console_keycode_t.html?c=false&cpp=false&cs=false&py=true&lua=false reference] (pay attention to the Python-specific notes).
-
-While we're at it, why not include keys to toggle fullscreen mode, and exit the game? You can put this at the beginning of the function.
-
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">  
-    key = libtcod.console_check_for_keypress()
-    if key.vk == libtcod.KEY_ENTER and key.lalt:
-        #Alt+Enter: toggle fullscreen
-        libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
-        
-    elif key.vk == libtcod.KEY_ESCAPE:
-        return True  #exit game</syntaxhighlight></div>
-
-
-From now on, we'll show code for a <span style="background-color: #D0FFC2">'''real-time game'''</span> with a green background, and code for a <span style="background-color: #DFEEFF">'''turn-based game'''</span> with a blue background.
-
-Notice a subtle difference here. The ''console_is_key_pressed'' function is useful for real-time games, since it checks if a key is pressed with no delays. ''console_check_for_keypress'', on the other hand, treats the key like it's being typed. So after the first press, it will stop working for a fraction of a second. This is the same behavior you see when you type, otherwise pressing a key would result in you typing 3 or 4 letters! It's useful for all commands except movement, which you usually want to react as soon as possible with no delays, and continue for as long as you press the movement keys.
-
-Now here's an important thing: you can use that first line to distinguish between real-time and turn-based gameplay! See, ''console_check_for_keypress'' won't block the game. But if you replace it with this line:
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #DFEEFF"><syntaxhighlight lang="python">    key = libtcod.console_wait_for_keypress(True)</syntaxhighlight></div>
-
-
-Then the game won't go on unless the player presses a key. So effectively you have a turn-based game now.
-
-Now, the main loop needs to call this function in order for it to work. If the returned value is True, then we "break" from the main loop, ending the game. The inside of the main loop should now look like this:
-
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">
-    libtcod.console_set_default_foreground(0, libtcod.white)
-    libtcod.console_put_char(0, playerx, playery, '@', libtcod.BKGND_NONE)
-    
-    libtcod.console_flush()
-    
-    #handle keys and exit game if needed
-    exit = handle_keys()
-    if exit:
-        break</syntaxhighlight></div>
-
-
-The reason why we draw stuff before handling key input is that, in a turn-based game, the first screen is shown before the first key is pressed (otherwise the first screen would be blank).
-
-One more thing! If you try that, you'll see that moving you leave around a trail of little @'s. That's not what we want! We need to clear the character at the last position before moving to the new one, this can be done by simply printing a space there. Put this just before ''exit = handle_keys()''.
-
-
-<div style="padding: 5px; border: solid 1px #C0C0C0; background-color: #F0F0F0"><syntaxhighlight lang="python">        libtcod.console_put_char(0, playerx, playery, ' ', libtcod.BKGND_NONE)</syntaxhighlight></div>
-
-
-[[Complete Roguelike Tutorial, using python+libtcod, part 1 code#Moving around|Here]]'s a rundown of the whole code so far.
-
-[[Complete Roguelike Tutorial, using python+libtcod, part 2|Go on to the next part]].
-
-[[Category:Developing]]
-
-
-
-.. code-block:: bash
-
-  pip install pysdl2
-
-.. code-block:: ruby
-
-  @a = "using code-block ruby"
-  puts @a
-  
-.. code-block:: python
-
-  [i for i in range(10)]
+TODO
