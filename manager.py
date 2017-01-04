@@ -1,30 +1,5 @@
 """Basic scene manager."""
 
-"""
-    zlib License:
-    --------------------------------------------------------------------------
-    # Copyright 2017 Lucas Siqueira <lucas.morais.siqueira@gmail.com>
-    #
-    # This software is provided 'as-is', without any express or implied
-    # warranty.  In no event will the authors be held liable for any damages
-    # arising from the use of this software.
-    #
-    # Permission is granted to anyone to use this software for any purpose,
-    # including commercial applications, and to alter it and redistribute it
-    # freely, subject to the following restrictions:
-    #
-    # 1. The origin of this software must not be misrepresented; you must not
-    #    claim that you wrote the original software. If you use this software
-    #    in a product, an acknowledgment in the product documentation would be
-    #    appreciated but is not required.
-    # 2. Altered source versions must be plainly marked as such, and must not
-    #    be misrepresented as being the original software.
-    # 3. This notice may not be removed or altered from any source
-    #    distribution.
-    --------------------------------------------------------------------------
-"""
-
-
 import ctypes
 import os
 
@@ -146,11 +121,17 @@ class Manager(object):
         This is only required during initialization. Later on the mouse
         position will be passed through events.
         """
+        # This is an example of what PySDL2, below the hood, does for us.
+        # Here we create a ctypes int (i.e. a C type int)
         x = ctypes.c_int(0)
         y = ctypes.c_int(0)
+        # And pass it by reference to the SDL C function (i.e. pointers)
         sdl2.mouse.SDL_GetMouseState(ctypes.byref(x), ctypes.byref(y))
+        # The variables were modified by SDL, but are still of C type
+        # So we need to get their values as python integers
         self._mouse_x = x.value
         self._mouse_y = y.value
+        # Now we hope we're never going to deal with this kind of stuff again
         return self._mouse_x, self._mouse_y
 
     def run(self):
@@ -179,7 +160,7 @@ class Manager(object):
                 self.on_update()
                 continue
 
-            # on_mouse_motion | on_mouse_drag
+            # on_mouse_motion, on_mouse_drag
             if event.type == sdl2.SDL_MOUSEMOTION:
                 x = event.motion.x
                 y = event.motion.y
@@ -233,7 +214,7 @@ class Manager(object):
                 scene.on_key_press(event, sym, mod)
 
     def on_update(self):
-        """Update scene unless specified not to do so."""
+        """Update the active scene."""
         scene = self.scene
         if self.alive:
             # clear the window with its color
@@ -261,8 +242,6 @@ class Manager(object):
 
 class KeyboardStateController:
     """A class that keeps track of keyboard modifiers and locks."""
-
-    __slots__ = ('_alt', '_ctrl', '_shift', 'caps', 'num', 'scroll')
 
     def __init__(self):
         """Initialization."""

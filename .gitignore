@@ -2,7 +2,6 @@
 *.sublime-workspace
 *.sublime-project
 *.cmd
-screenshots/
 __pycache__/
 save/
 docs/
